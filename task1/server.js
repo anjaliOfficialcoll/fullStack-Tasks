@@ -1,0 +1,69 @@
+const express = require("express");
+const mysql = require("mysql2");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+
+const app = express();
+
+app.use(cors());
+app.use(bodyParser.json());
+
+// Database connection
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "root@2026",
+  database: "login_db"
+});
+
+db.connect((err) => {
+  if (err) {
+    console.log("Database connection failed");
+    console.log(err);
+  } else {
+    console.log("Database connected");
+  }
+});
+
+// Login API
+app.post("/login", (req, res) => {
+ 
+  const name = req.body.name;
+  const email = req.body.email;
+  const dob=req.body.dob;
+  const department=req.body.department;
+  const phone=req.body.phone;
+
+  const sql = "INSERT INTO participants (name,email,phone,dob,department) VALUES (?,?,?,?,?)";
+  db.query(sql, [name,email,phone,dob,department], (err, result) => {
+    if (err) {
+        console.log("mysql error:"+err);
+      return res.json({ message: "error inserting data" });
+    } else {
+      res.json({ message: "Data inserted successfully" });
+    }
+  });
+});
+
+
+// GET API - Retrieve all students
+app.get("/participants", (req, res) => {
+
+  const sql = "SELECT * FROM participants";
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.log("MySQL Error: " + err);
+      return res.json({ message: "Error fetching data" });
+    } else {
+      res.json(result);   // sends all rows to frontend
+    }
+  });
+
+});
+
+
+// START SERVER (MOST IMPORTANT)
+app.listen(3000, () => {
+  console.log("Server started on port 3000");
+});
