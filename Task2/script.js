@@ -12,10 +12,12 @@ function renderTable(data){
     tableBody.innerHTML="";
     data.forEach(student=>{
         const row=document.createElement("tr");
+        // Format date to show only date part (YYYY-MM-DD)
+        const dateOnly = student.Joining_Date ? student.Joining_Date.split('T')[0] : '';
         row.innerHTML=`
         <td>${student.Name}</td>
         <td>${student.Department}</td>
-        <td>${student.Joining_Date}</td>
+        <td>${dateOnly}</td>
         `;
         tableBody.appendChild(row);
     });
