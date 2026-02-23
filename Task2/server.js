@@ -1,3 +1,5 @@
+require('dotenv').config({ path: '../.env' });
+
 //server.js (Backend – Node + Express + MySQL)
 
 const express = require('express');
@@ -12,10 +14,10 @@ app.use(cors());
 // MySQL connection
 
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "root@2026",
-  database: "fsTaskDb"
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME_TASK3
 });
 
 db.connect(err => {
