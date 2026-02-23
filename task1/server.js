@@ -2,11 +2,15 @@ const express = require("express");
 const mysql = require("mysql2");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const path = require("path");
 
 const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+
+// Serve static files (HTML, CSS, JS)
+app.use(express.static(path.join(__dirname)));
 
 // Database connection
 const db = mysql.createConnection({
@@ -18,10 +22,11 @@ const db = mysql.createConnection({
 
 db.connect((err) => {
   if (err) {
-    console.log("Database connection failed");
-    console.log(err);
+    console.error("❌ Database connection failed:", err.message);
+    console.log("⚠️ Server will run, but database operations will fail");
+    console.log("📝 Make sure MySQL is running and database 'login_db' exists");
   } else {
-    console.log("Database connected");
+    console.log("✅ Database connected successfully");
   }
 });
 
@@ -65,5 +70,7 @@ app.get("/participants", (req, res) => {
 
 // START SERVER (MOST IMPORTANT)
 app.listen(3000, () => {
-  console.log("Server started on port 3000");
+  console.log("🚀 Server started on http://localhost:3000");
+  console.log("📄 Open: http://localhost:3000/index.html");
+  console.log("📋 View participants: http://localhost:3000/participants");
 });
